@@ -38,49 +38,22 @@ HotSpotDAO.prototype.getHotSpots = function ( coords, maxR, minR, callback ) {
     });
 };
 
-HotSpotDAO.prototype.setBallot = function ( ballot, callback ) { 
-    var query = { "_id" : ballot.ballot };
-    var update = { 
-        "$set" : { "projects" : ballot.projects, "rank" : ballot.rank }
-    };
+HotSpotDAO.prototype.setHotSpot = function ( hotspot, callback ) { 
 
-    this.ballots.update( query, update, function ( err ) {
-        callback( err );
-    });
-}
+    if( !hotspot ) {
+        callback( "there's no hotspot for me to insert" );
+        return;
+    }
 
-HotSpotDAO.prototype.getRound = function ( roundID, callback ) {
-    var id = parseInt( roundID );
-    var query = { "_id" : id };
-    var fields = { "_id" : 0 };
-
-    this.rounds.findOne( query, fields, function(err, round ) {
-        if( err )
+    dao.hotspots.insert( hotspot, 
+        function ( err ) {
             callback( err );
-
-        else if( !round ) 
-            callback( "no such round" );
-        else 
-            callback( null, round );
-    });
-};
-
-HotSpotDAO.prototype.setRound = function ( round, callback ) {
-
-    var query = { "_id" : round.round };
-    round._id = parseInt ( round.round );   
-    delete round.round;
-
-    this.rounds.update( query, round, { upsert : true }, function( err ) {
-        if( err )
-            callback( err );
-        else 
-            callback( null );
-    });
+        }
+    );
 };
 
 HotSpotDAO.prototype.aggregate = function( pipeline, callback ) {
-    this.ballots.aggregate( pipeline, function(err, result ) {
+    this.hotspot.aggregate( pipeline, function(err, result ) {
         if( err ) 
           callback( err, null );
         else
