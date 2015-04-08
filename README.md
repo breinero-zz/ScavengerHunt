@@ -4,23 +4,19 @@ Where in NYC is Norbeardo?
 Overview
 --------
 
-The Application
-~~~~~~~~~~~~~~~
+###The Application###
 
 `Walking Tour` (needs a better name) is a geo-caching game for mobile apps. A tour guide posts a tour with challenges at multiple waypoints.  The challenger must reach and complete the waypoints within a given time. The challenger wins if they complete the course within the challenge time.
 
-The demo
-~~~~~~~~
+##The demo###
 Somebody runs out ahead of Norberto and marks out a course of food spots he must eat at. Our hero Norberto then has to reach each vendor and and eat the selected food and get back to the conf before time runs out. Participants in the audience votes for or against Norbeardo
 
 Point of Interest
 -----------------
 
-Document Model
-~~~~~~~~~~~~~~
+###Document Model###
 
-::
-
+```
     {
         _id: 9101
         user: <userId>,
@@ -36,9 +32,9 @@ Document Model
             "coordinates": [125.6, 10.1]
         }
     }
+```
 
-Field Definitions
-~~~~~~~~~~~~~~~~~
+###Field Definitions###
 - '_id' unique POI identifier. Also serves as a cheat code, entered when the contestant completes goal
 - 'user' The user who posted this point of interest
 - 'name' The name of this POI
@@ -47,56 +43,48 @@ Field Definitions
 - GEO JSON location of the POI
 
 
-REST API
-~~~~~~~~
+###REST API###
 
-Alert contestant when POI is within 100 meters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+####Alert contestant when POI is within 100 meters####
 
 HTTP GET 
 
-:: 
-
+```
     <host:port>/poi?tour=1234,lat=40.87304&lon=-73.871275&max=100
+```
 
 Response
 
-::
-
+```
     Content-Type: "text"
     "Hungry for a Coney Island?"
+```
 
-
-Check if the goal code is right
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+###Check if the goal code is right###
 
 HTTP GET 
 
-:: 
-
+```
     <host:port>/poi?tour=1234,code=5678
+```
 
 Response
-
-::
-
+```
     Content-Type: "text"
     "Congradulations! <goal description>"
+```
 
-POST 
-^^^^
+###POST###
 
 URL
 
-::
-
+```
     <host:port>/poi
+```
 
-Request Body
+Request Body, where content-type: application/json
 
-::
-
-    // content-type: application/json
+```
     {
         user: 1234,
         description: "some text"
@@ -105,22 +93,18 @@ Request Body
             "coordinates": [125.6, 10.1]
         }
     }
-
+```
 
 HTTP PUT
 --------
 
 URL
-
-::
-    
+```
     <host:port>poi/9101
+```
+Request Body, content-type: application/json
 
-Request Body
-
-::
-
-    // content-type: application/json
+```
     {
         clues: [
             "Hungry for a Coney Island?",
@@ -128,15 +112,16 @@ Request Body
             "Look for the hot dog stand"
         ] 
     }
+```
 
 HTTP Delete
 -----------
 
 URL
 
-::
-
+```
     /poi/9101
+```
 
 Tour
 ----
@@ -144,11 +129,8 @@ Tour
 A tour is a virtual course, marked out by a challenger. 
 
 
-Document Model
-~~~~~~~~~~~~~~
-
-::
-
+###Document Model###
+```
     {
         name: <string>,
         user: <user_id>,
@@ -167,26 +149,23 @@ Document Model
         }
         
     }
+```
 
-Field Definitions
-~~~~~~~~~~~~~~~~~
+####Field Definitions####
 - 'name' The tour name
 - 'user' The challenger who authored the tour
 - 'time' The total time the tour should take
 - 'checkpoints' The list of goals the contestant must complete to win the tour
 - 'checkpoints.poi' A reference the the point-of-interest document that describes the checkpoint
-- 'checkpoints.time' The amout of time it should take to complete this goal
+- 'checkpoints.time' The amount of time it should take to complete this goal
 - 'geometry' The line string defining the tour course.
 
-REST API
-~~~~~~~~
+###REST API###
 
-GET
-^^^
+####GET####
 
 URL 
-::
-
+```
     // by proximity 
     <host:port>/tour?lat=40.87304&lon=-73.871275&max=100
 
@@ -195,58 +174,51 @@ URL
 
     // by explicit id
     <host:port>/tour/1234
+```
 
-POST
-^^^^
+####POST####
 
 URL
-::
-    
+```
     <host:port>/tour
+```
 
 Request Body
-::
-
+```
     {
         name: <string>,
         user: <user_id>
     }  
+```
 
-PUT
-^^^
+####PUT####
 URL
-::
-
+```
     <host:port>/tour/1234
-
+```
 
 URL
-::
-
+```
     <host:port>/tour/1234?checkpoint=<poi_ref>
-    
+```  
 Request Body
-::
-
+```
     //uneeded 
+```
 
-DELETE
-^^^^^^
+####DELETE####
 
 URL
-::
-
+```
     // only explicit delete supported
     <host:port>/tour/1234
+```
 
 USER
 ----
 
-Document Model
-~~~~~~~~~~~~~~
-
-:: 
-    
+###Document Model###
+```
     {
         _id: <int>,
         name: <string>,
@@ -254,9 +226,9 @@ Document Model
         pass: <hash>,
         description: <string>
     }
+```
 
-Field Definitions
-~~~~~~~~~~~~~~~~~
+###Field Definitions###
 - _id: Unique identifier for user (immutable)
 - name: User's name 
 - email: User's email
