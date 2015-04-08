@@ -50,28 +50,34 @@ Field Definitions
 REST API
 ~~~~~~~~
 
-GET
-^^^
+Alert contestant when POI is within 100 meters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-URL 
+HTTP GET 
+
 :: 
 
-    // Alert contestant when POI is within 100 meters
     <host:port>/poi?tour=1234,lat=40.87304&lon=-73.871275&max=100
 
 Response
+
 ::
 
     Content-Type: "text"
     "Hungry for a Coney Island?"
 
-URL 
+
+Check if the goal code is right
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+HTTP GET 
+
 :: 
 
-    // Check if the goal code is right
     <host:port>/poi?tour=1234,code=5678
 
 Response
+
 ::
 
     Content-Type: "text"
@@ -81,6 +87,7 @@ POST
 ^^^^
 
 URL
+
 ::
 
     <host:port>/poi
@@ -104,11 +111,13 @@ HTTP PUT
 --------
 
 URL
+
 ::
     
     <host:port>poi/9101
 
 Request Body
+
 ::
 
     // content-type: application/json
@@ -122,7 +131,9 @@ Request Body
 
 HTTP Delete
 -----------
+
 URL
+
 ::
 
     /poi/9101
