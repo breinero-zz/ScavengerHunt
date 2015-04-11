@@ -1,0 +1,22 @@
+<Specification name="poi" timetolive="60" >
+<SetVariable>
+    <Name>servlet_name</Name>
+    <Value><RegularExpression>
+            <Input><RequestURI/></Input>
+            <Pattern>/Tour/(.*)</Pattern></RegularExpression></Value>
+</SetVariable>
+<If>
+    <And>
+        <Compare op="seq" >
+            <Value><RequestMethod/></Value>
+            <Value>GET</Value>
+        </Compare>
+    </And>
+    <Block>
+        <SubTree>NearPOIQuery</SubTree>
+    </Block>
+    <Else>
+        <Block><ResponseBody><RequestMethod/></ResponseBody></Block>
+    </Else>
+</If>
+</Specification>

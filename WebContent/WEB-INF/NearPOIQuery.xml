@@ -1,0 +1,30 @@
+<Specification name="NearPOIQuery" timetolive="60" >
+    <ResponseBody>
+        <DAO>
+            <Name><GetVariable>servlet_name</GetVariable></Name>
+            <Type>query</Type>
+            <Document>
+                <Field>
+                    <Name>$near.$geometry.type</Name>
+                    <Type>string</Type>
+                    <Value>Point</Value>
+                </Field>
+                <Field>
+                    <Name>$near.$geometry.coordinates.$1</Name>
+                    <Type>double</Type>
+                    <Value><RequestParameter>lat</RequestParameter></Value>
+                </Field>
+                <Field>
+                    <Name>$near.$geometry.coordinates.$0</Name>
+                    <Type>double</Type>
+                    <Value><RequestParameter>lon</RequestParameter></Value>
+                </Field>
+                <Field>
+                    <Name>$near.$maxDistance</Name>
+                    <Type>double</Type>
+                    <Value><RequestParameter>max</RequestParameter></Value>
+                </Field>
+            </Document> 
+        </DAO>
+    </ResponseBody>
+</Specification>

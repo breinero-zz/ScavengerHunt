@@ -1,5 +1,6 @@
 package com.mongodb.web.tour.servlet;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.bryanreinero.hum.server.DAO;
 import com.bryanreinero.hum.server.DAOService;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
 
 
 public class ContexConfigulator implements ServletContextListener, DAOService {
@@ -31,11 +34,23 @@ public class ContexConfigulator implements ServletContextListener, DAOService {
         
         daos.put("configs", 
         		new configDAO( servletContext.getInitParameter("server.config.rootDir") ) );
+        
+        MongoClient client = null;
+        try {
+			client = new MongoClient();
+		} catch (UnknownHostException e) {
+			logger.fatal(e.getMessage());
+		}
+        
+        if( client != null ) {
+        	DBCollection  coll = client.getDB("walkingtour").getCollection("hotspots");
+        	daos.put("Poi", new POIAccessObject( coll ) );
+        }
   
 		servletContext.setAttribute("daoService", this);
     }
 
-    @Override
+	@Override
     public void contextDestroyed(ServletContextEvent event) {
         // NOOP.
     }
