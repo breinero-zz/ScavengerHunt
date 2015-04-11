@@ -10,7 +10,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import com.bryanreinero.hum.element.DecisionTree;
+import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.hum.parser.XMLParser;
 import com.bryanreinero.hum.parser.XMLParserFactory;
 import com.bryanreinero.hum.persistence.ConfigDAO;
@@ -20,7 +20,7 @@ public class configDAO implements DAO {
 	
 	public static Logger logger = LogManager.getLogger( Poi.class.getName() ); 
 	
-	private Map<String, DecisionTree> configs = new ConcurrentHashMap<String, DecisionTree>();
+	private Map<String, Specification> configs = new ConcurrentHashMap<String, Specification>();
 	private XMLParser parser;
 	private String path;
 	
@@ -29,8 +29,8 @@ public class configDAO implements DAO {
 		parser = XMLParserFactory.getParser();
 	}
 	
-	private DecisionTree getConfig( String key ) {
-		DecisionTree config = null;
+	private Specification getConfig( String key ) {
+		Specification config = null;
 		try {
 			config = parser.parse(new FileInputStream( path+key+".xml") );
 		} catch (FileNotFoundException e) {
@@ -56,10 +56,11 @@ public class configDAO implements DAO {
 	@Override
 	public Object execute(Map<String, Object> request) {
 		String name =  (String)request.get("name");
-		if ( ! configs.containsKey( name ) )
-			return getConfig( name );
-		else
-			return configs.get(name);
+//		if ( ! configs.containsKey( name ) )
+//			return getConfig( name );
+//		else
+//			return configs.get(name);
+		return getConfig( name );
 	}
 
 }

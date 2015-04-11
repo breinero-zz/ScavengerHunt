@@ -1,14 +1,10 @@
-<DecisionTree name="root" timetolive="60" >
-<SetVariable>
-	<Name>servlet_name</Name>
-	<Value><RegularExpression>
-			<Input><RequestURI/></Input>
-			<Pattern>/Tour/(.*)</Pattern>
-			</RegularExpression></Value>
-</SetVariable>
-<ResponseBody>
-<GetVariable>servlet_name</GetVariable>
-</ResponseBody>
-<SubTree><GetVariable>servlet_name</GetVariable></SubTree>
-
-</DecisionTree>
+<Specification name="root" timetolive="60" >
+    <SetVariable>
+        <Name>servlet_name</Name>
+        <Value><RegularExpression>
+                <Input><RequestURI/></Input>
+                <Pattern>/Tour/(.*)</Pattern>
+                </RegularExpression></Value>
+    </SetVariable>
+    <SubTree><GetVariable>servlet_name</GetVariable></SubTree>
+</Specification>
