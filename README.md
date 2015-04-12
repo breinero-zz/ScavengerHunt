@@ -47,7 +47,7 @@ Point of Interest
 
 ####Alert contestant when POI is within 100 meters####
 
-HTTP GET 
+####GET####
 
 ```
     <host:port>/poi?tour=1234,lat=40.87304&lon=-73.871275&max=100
@@ -62,7 +62,7 @@ Response
 
 ###Check if the goal code is right###
 
-HTTP GET 
+####GET#### 
 
 ```
     <host:port>/poi?tour=1234,code=5678
@@ -95,8 +95,7 @@ Request Body, where content-type: application/json
     }
 ```
 
-HTTP PUT
---------
+####PUT####
 
 URL
 ```
@@ -114,8 +113,7 @@ Request Body, content-type: application/json
     }
 ```
 
-HTTP Delete
------------
+####Delete####
 
 URL
 
@@ -234,3 +232,7 @@ USER
 - email: User's email
 - pass: Hashed passphrase
 - description: Blurb about the user (140 character limit)
+
+#Todos#
+- Add in metrics from Firehose
+- Implement circuit breaker patterns 
