@@ -235,4 +235,4 @@ USER
 
 #Todos#
 - Add in metrics from Firehose
-- Implement circuit breaker patterns 
+- Test circuit breaker patterns 
