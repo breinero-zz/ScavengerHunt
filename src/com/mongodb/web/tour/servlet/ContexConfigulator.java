@@ -12,6 +12,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.bryanreinero.firehose.metrics.SampleSet;
 import com.bryanreinero.hum.server.DAO;
 import com.bryanreinero.hum.server.DAOService;
 import com.mongodb.DBCollection;
@@ -32,6 +33,8 @@ public class ContexConfigulator implements ServletContextListener, DAOService {
         String prefix = "/Users/breinero/Documents/workspace/Tour/WebContent/";
         PropertyConfigurator.configure( prefix + l4jConfigPath );
         
+        SampleSet set = new SampleSet();
+        
         daos.put("configs", 
         		new configDAO( servletContext.getInitParameter("server.config.rootDir") ) );
         
@@ -44,7 +47,7 @@ public class ContexConfigulator implements ServletContextListener, DAOService {
         
         if( client != null ) {
         	DBCollection  coll = client.getDB("walkingtour").getCollection("hotspots");
-        	daos.put("Poi", new POIAccessObject( coll ) );
+        	daos.put("Poi", new POIAccessObject( coll, set ) );
         }
   
 		servletContext.setAttribute("daoService", this);

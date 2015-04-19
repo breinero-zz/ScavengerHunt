@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.bryanreinero.firehose.metrics.Interval;
+import com.bryanreinero.firehose.metrics.SampleSet;
 import com.bryanreinero.hum.server.DAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 public class POIAccessObject implements DAO {
 
 	private final DBCollection collection;
+	private final SampleSet samples;
 	
 	public class Result {
 		private List<Object> objects = new ArrayList<Object>();
@@ -29,8 +33,9 @@ public class POIAccessObject implements DAO {
 		}
 	}
 	
-	public POIAccessObject( DBCollection collection ) {
+	public POIAccessObject( DBCollection collection, SampleSet samples ) {
 		this.collection = collection;
+		this.samples = samples;
 	}
 	
 	@Override
@@ -39,7 +44,10 @@ public class POIAccessObject implements DAO {
 		DBObject query = new BasicDBObject( "Location.geometry", near );
 		
 		Result r = new Result();
-		for ( Object o: collection.find( query ) )
+		Interval i = samples.set("getPOI");
+		DBCursor cursor = collection.find( query );
+		i.mark();
+		for ( Object o: cursor )
 			r.addObject(o);
 			
 		return r;
