@@ -34,14 +34,11 @@ public class configDAO implements DAO {
 		try {
 			config = parser.parse(new FileInputStream( path+key+".xml") );
 		} catch (FileNotFoundException e) {
-			logger.warn( e.getCause() );
-			e.printStackTrace();
+			logger.warn( e.getMessage() );
 		} catch (IOException e) {
-			logger.warn( e.getCause() );
-			e.printStackTrace();
+			logger.warn( e.getMessage() );
 		} catch (SAXException e) {
-			logger.warn( e.getCause() );
-			e.printStackTrace();
+			logger.warn( e.getMessage() );
 		}
 		finally {
 			if ( config == null )
