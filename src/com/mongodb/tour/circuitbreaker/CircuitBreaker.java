@@ -9,7 +9,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.bryanreinero.firehose.metrics.SampleSet;
 
-public class CiruitBreaker {
+public class CircuitBreaker {
 	private final AtomicBoolean isTripped = new AtomicBoolean(false);
 	
 	private final Map<String, Threshold> tresholds = new HashMap<String, Threshold>();
@@ -18,7 +18,7 @@ public class CiruitBreaker {
 	// How often the CircuitBreaker should check thresholds
 	private Integer interval = new Integer(1000);
 	
-	public CiruitBreaker( SampleSet set ){
+	public CircuitBreaker( SampleSet set ){
 		samples = set;
 	}
 	
