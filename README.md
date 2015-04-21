@@ -1,18 +1,16 @@
-Where in NYC is Norbeardo?
-==========================
+#Where in NYC is Norbeardo?
 
-Overview
---------
+
+##Overview
 
 ###The Application###
 
 `Walking Tour` (needs a better name) is a geo-caching game for mobile apps. A tour guide posts a tour with challenges at multiple waypoints.  The challenger must reach and complete the waypoints within a given time. The challenger wins if they complete the course within the challenge time.
 
-##The demo###
+##The demo##
 Somebody runs out ahead of Norberto and marks out a course of food spots he must eat at. Our hero Norberto then has to reach each vendor and and eat the selected food and get back to the conf before time runs out. Participants in the audience votes for or against Norbeardo
 
-Point of Interest
------------------
+##Point of Interest
 
 ###Document Model###
 
@@ -53,7 +51,7 @@ Point of Interest
     <host:port>/poi?tour=1234,lat=40.87304&lon=-73.871275&max=100
 ```
 
-Response
+#####Response
 
 ```
     Content-Type: "text"
@@ -62,7 +60,7 @@ Response
 
 ###Check if the goal code is right###
 
-####GET#### 
+####GET
 
 ```
     <host:port>/poi?tour=1234,code=5678
@@ -76,7 +74,7 @@ Response
 
 ###POST###
 
-URL
+#####URL
 
 ```
     <host:port>/poi
@@ -115,14 +113,14 @@ Request Body, content-type: application/json
 
 ####Delete####
 
-URL
+#####URL
 
 ```
     /poi/9101
 ```
 
-Tour
-----
+##Tour
+
 
 A tour is a virtual course, marked out by a challenger. 
 
@@ -162,7 +160,7 @@ A tour is a virtual course, marked out by a challenger.
 
 ####GET####
 
-URL 
+#####URL 
 ```
     // by proximity 
     <host:port>/tour?lat=40.87304&lon=-73.871275&max=100
@@ -176,12 +174,12 @@ URL
 
 ####POST####
 
-URL
+#####URL
 ```
     <host:port>/tour
 ```
 
-Request Body
+#####Request Body
 ```
     {
         name: <string>,
@@ -190,30 +188,29 @@ Request Body
 ```
 
 ####PUT####
-URL
+#####URL
 ```
     <host:port>/tour/1234
 ```
 
-URL
+#####URL
 ```
     <host:port>/tour/1234?checkpoint=<poi_ref>
 ```  
-Request Body
+#####Request Body
 ```
     //uneeded 
 ```
 
 ####DELETE####
 
-URL
+#####URL
 ```
     // only explicit delete supported
     <host:port>/tour/1234
 ```
 
-USER
-----
+##USER
 
 ###Document Model###
 ```
