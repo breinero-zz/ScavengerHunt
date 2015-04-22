@@ -1,0 +1,39 @@
+<Specification name="NearPOIQuery" timetolive="60" >
+    <SetVariable>
+        <Name>description</Name>
+        <Value>
+            <DAO>
+                <Name><GetVariable>servlet_name</GetVariable></Name>
+                <Type>query</Type>
+                <Document>
+                    <Field>
+                        <Name>_id</Name>
+                        <Type>string</Type>
+                        <Value><RequestParameter>Tour</RequestParameter></Value>
+                    </Field>
+                    <Field>
+                        <Name>$near.$maxDistance</Name>
+                        <Type>double</Type>
+                        <Value><RequestParameter>Code</RequestParameter></Value>
+                    </Field>
+                </Document> 
+            </DAO>
+        </Value>
+    </SetVariable>
+    <ResponseBody>
+        <If>
+            <And>
+                <Compare op="seq" >
+                    <Value><GetVariable>description</GetVariable></Value>
+                    <Value>null</Value>
+                </Compare>
+            </And>
+            <Block>
+                <ResponseBody>Sorry! Try again.</ResponseBody>
+            </Block>
+            <Else>
+                <Block><ResponseBody>Congradulations! You found it!<GetVariable>description</GetVariable></ResponseBody></Block>
+            </Else>
+        </If>
+    </ResponseBody>
+</Specification>
