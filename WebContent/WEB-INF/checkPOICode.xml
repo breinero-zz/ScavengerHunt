@@ -9,18 +9,17 @@
                     <Field>
                         <Name>_id</Name>
                         <Type>string</Type>
-                        <Value><RequestParameter>Tour</RequestParameter></Value>
+                        <Value><RequestParameter>tour</RequestParameter></Value>
                     </Field>
                     <Field>
-                        <Name>$near.$maxDistance</Name>
+                        <Name>code</Name>
                         <Type>double</Type>
-                        <Value><RequestParameter>Code</RequestParameter></Value>
+                        <Value><RequestParameter>code</RequestParameter></Value>
                     </Field>
                 </Document> 
             </DAO>
         </Value>
     </SetVariable>
-    <ResponseBody>
         <If>
             <And>
                 <Compare op="seq" >
@@ -35,5 +34,4 @@
                 <Block><ResponseBody>Congradulations! You found it!<GetVariable>description</GetVariable></ResponseBody></Block>
             </Else>
         </If>
-    </ResponseBody>
 </Specification>

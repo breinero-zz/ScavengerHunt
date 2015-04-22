@@ -1,0 +1,66 @@
+<Specification name="POIQuery" timetolive="60" >
+<If>
+    <And>
+        <Compare op="exists" >
+            <Value><RequestParameter>tour</RequestParameter></Value>
+            <Value>null</Value>
+        </Compare>
+    </And>
+    <Block>
+        <If>
+            <And>
+                <Compare op="exists" >
+                    <Value><RequestParameter>code</RequestParameter></Value>
+                    <Value>null</Value>
+                </Compare>
+            </And>
+            <Block>
+                <!-- <SubTree>checkPOIcode</SubTree> -->
+                <ResponseBody>This is where checking the code should be</ResponseBody>
+            </Block>
+            <Else>
+                <If>
+                    <And>
+                        <Compare op="exists"  >
+                            <Value><RequestParameter>clue</RequestParameter></Value><Value></Value>
+                        </Compare>
+                    </And>
+                    <Block>
+                        <ResponseBody>This is where getting a clue should be</ResponseBody>
+                        <!--<SubTree>Get_Clue</SubTree>-->
+                    </Block>
+                    <Else>
+                        <If>
+                            <And>
+                                <Compare op="exists" >
+                                    <Value><RequestParameter>lat</RequestParameter></Value>
+                                    <Value>null</Value>
+                                </Compare>
+                                <Compare op="exists" >
+                                    <Value><RequestParameter>lon</RequestParameter></Value>
+                                    <Value>null</Value>
+                                </Compare>
+                                <Compare op="exists" >
+                                    <Value><RequestParameter>max</RequestParameter></Value>
+                                    <Value>null</Value>
+                                </Compare>
+                            </And>
+                            <Block>
+                                <ResponseBody>This is where getting a point should be</ResponseBody>
+                                <!--<SubTree>NearPOIQuery</SubTree>-->
+                            </Block>
+                            <Else>
+                                <Block><ResponseBody>We're Missing Parameters</ResponseBody>
+                                </Block>
+                            </Else>
+                        </If>
+                    </Else>
+                </If>
+            </Else>
+        </If>
+    </Block>
+    <Else>
+        <Block><ResponseBody>You're missing Parameters</ResponseBody></Block>
+    </Else>
+</If>
+</Specification>

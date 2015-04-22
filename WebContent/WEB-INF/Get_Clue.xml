@@ -1,0 +1,20 @@
+<Specification name="Get_Clue" timetolive="60" >
+    <ResponseBody>
+        <DAO>
+            <Name><GetVariable>servlet_name</GetVariable></Name>
+            <Type>query</Type>
+            <Document>
+                <Field>
+                    <Name>clues</Name>
+                    <Type>integer</Type>
+                    <Value><RequestParameter>clue</RequestParameter></Value>
+                </Field>
+                <Field>
+                    <Name>_id</Name>
+                    <Type>integer</Type>
+                    <Value><RequestParameter>tour</RequestParameter></Value>
+                </Field>
+            </Document> 
+        </DAO>
+    </ResponseBody>
+</Specification>
