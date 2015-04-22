@@ -4,14 +4,25 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class Latency implements Threshold {
 
-	private final Integer max;
+	private final Double max;
+	private final static BreakerType type = BreakerType.latency;
 	
-	public Latency ( Integer max ) {
+	public Latency ( Double max ) {
 		this.max = max;
 	}
 	
 	@Override
 	public boolean isExceeded(DescriptiveStatistics stats) {
 		return ( stats.getMean() >= max );
+	}
+	
+	@Override 
+	public BreakerType getType() {
+		return type;
+	}
+	
+	@Override
+	public double getValue() {
+		return max;
 	}
 }

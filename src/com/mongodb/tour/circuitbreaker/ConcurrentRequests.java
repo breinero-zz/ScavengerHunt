@@ -4,15 +4,26 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class ConcurrentRequests implements Threshold {
 
-	private final Integer max;
+	private final Double max;
+	private static final BreakerType type = BreakerType.concurrency;
 	
-	public ConcurrentRequests( Integer max ) {
+	public ConcurrentRequests( Double max ) {
 		this.max = max;
 	}
 	
 	@Override
 	public boolean isExceeded(DescriptiveStatistics stats) {
 		return ( (stats.getN() * stats.getMean()) >= max );
+	}
+
+	@Override
+	public BreakerType getType() {
+		return type;
+	}
+
+	@Override
+	public double getValue() {
+		return max;
 	}
 
 }
