@@ -232,4 +232,5 @@ A tour is a virtual course, marked out by a challenger.
 
 #Todos#
 - Add in metrics from Firehose
-- Test circuit breaker patterns 
+- Implement circuit breakers
+- Enable JMX access from the servlet container
