@@ -9,6 +9,7 @@ import java.util.concurrent.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.hum.parser.XMLParser;
@@ -37,8 +38,8 @@ public class configDAO implements DAO {
 			logger.warn( e.getMessage() );
 		} catch (IOException e) {
 			logger.warn( e.getMessage() );
-		} catch (SAXException e) {
-			logger.warn( e.getMessage() );
+		} catch (SAXException ex) {
+			logger.warn(ex.getClass()+" Specification: "+key+", message: \""+ex.getMessage()+"\"" );
 		}
 		finally {
 			if ( config == null )

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.bryanreinero.firehose.circuitbreaker.CircuitBreaker;
 import com.bryanreinero.firehose.metrics.Interval;
 import com.bryanreinero.firehose.metrics.SampleSet;
 import com.bryanreinero.hum.server.DAO;
@@ -16,6 +17,7 @@ public class POIAccessObject implements DAO {
 
 	private final DBCollection collection;
 	private final SampleSet samples;
+	private final CircuitBreaker breaker;
 	
 	public class Result {
 		private List<Object> objects = new ArrayList<Object>();
@@ -33,9 +35,10 @@ public class POIAccessObject implements DAO {
 		}
 	}
 	
-	public POIAccessObject( DBCollection collection, SampleSet samples ) {
-		this.collection = collection;
-		this.samples = samples;
+	public POIAccessObject( DBCollection c, SampleSet s, CircuitBreaker cb ) {
+		this.collection = c;
+		this.samples = s;
+		this.breaker = cb;
 	}
 	
 	@Override
@@ -45,6 +48,7 @@ public class POIAccessObject implements DAO {
 		
 		Result r = new Result();
 		Interval i = samples.set("getPOI");
+		
 		DBCursor cursor = collection.find( query );
 		i.mark();
 		for ( Object o: cursor )
