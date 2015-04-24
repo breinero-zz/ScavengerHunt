@@ -230,7 +230,6 @@ A tour is a virtual course, marked out by a challenger.
 - pass: Hashed passphrase
 - description: Blurb about the user (140 character limit)
 
-#Todos#
-- Add in metrics from Firehose
-- Implement circuit breakers
-- Enable JMX access from the servlet container
+##Todos##
+- Improve servlet configuration logic for JMX|DAO|Circuit Breaker
+- Improve JMX integration
