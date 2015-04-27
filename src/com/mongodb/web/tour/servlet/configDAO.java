@@ -9,15 +9,14 @@ import java.util.concurrent.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.hum.parser.XMLParser;
 import com.bryanreinero.hum.parser.XMLParserFactory;
-import com.bryanreinero.hum.persistence.ConfigDAO;
-import com.bryanreinero.hum.server.DAO;
+import com.bryanreinero.hum.server.DefaultSpecification;
+import com.bryanreinero.firehose.dao.DataAccessObject;
 
-public class configDAO implements DAO {
+public class configDAO implements DataAccessObject {
 	
 	public static Logger logger = LogManager.getLogger( Poi.class.getName() ); 
 	
@@ -43,7 +42,7 @@ public class configDAO implements DAO {
 		}
 		finally {
 			if ( config == null )
-				config = ConfigDAO.defaultTree;
+				config = DefaultSpecification.spec;
 		}
 		
 		configs.put(key, config);

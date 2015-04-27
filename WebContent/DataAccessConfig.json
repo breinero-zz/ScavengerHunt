@@ -1,0 +1,28 @@
+{ 
+  clusters: [
+      { name: 'a',
+       hosts: [ 'localhost:27017' ] }
+  ], 
+  DAOs: [
+      {
+          name: 'Poi', 
+          className: 'com.mongodb.web.tour.servlet.POIAccessObject',
+          cluster: 'a', 
+          namespace: 'walkingtour.hotspots', 
+          writeConcern: {
+              w: 1,
+              tags: [ 'string' ]
+          },
+          readPref: {
+              mode: 'primary',
+              tags: []
+          },
+          timeout: 5000,
+          circuitbreakers: [ 
+                { opsPerSec: 5000.0 }, 
+                  { latency: 1000.0 }, 
+                  { concurrency: 50.0 } 
+            ] 
+        }
+    ] 
+};

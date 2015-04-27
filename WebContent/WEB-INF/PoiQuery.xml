@@ -46,8 +46,7 @@
                                 </Compare>
                             </And>
                             <Block>
-                                <ResponseBody>This is where getting a point should be</ResponseBody>
-                                <!--<SubTree>NearPOIQuery</SubTree>-->
+                                <SubTree>NearPOIQuery</SubTree>
                             </Block>
                             <Else>
                                 <Block><ResponseBody>We're Missing Parameters</ResponseBody>
