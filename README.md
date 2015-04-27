@@ -231,5 +231,4 @@ A tour is a virtual course, marked out by a challenger.
 - description: Blurb about the user (140 character limit)
 
 ##Todos##
-- Improve servlet configuration logic for JMX|DAO|Circuit Breaker
 - Improve JMX integration
