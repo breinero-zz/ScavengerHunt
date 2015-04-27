@@ -3,6 +3,7 @@
 
 ##Overview
 
+
 ###The Application###
 
 `Walking Tour` (needs a better name) is a geo-caching game for mobile apps. A tour guide posts a tour with challenges at multiple waypoints.  The challenger must reach and complete the waypoints within a given time. The challenger wins if they complete the course within the challenge time.
@@ -10,9 +11,9 @@
 ##The demo##
 Somebody runs out ahead of Norberto and marks out a course of food spots he must eat at. Our hero Norberto then has to reach each vendor and and eat the selected food and get back to the conf before time runs out. Participants in the audience votes for or against Norbeardo
 
-##Point of Interest
+##Data Model
 
-###Document Model###
+###Point of Interest###
 
 ```
     {
@@ -230,5 +231,24 @@ A tour is a virtual course, marked out by a challenger.
 - pass: Hashed passphrase
 - description: Blurb about the user (140 character limit)
 
+
+###Depedencies 
+
+####Firehose
+Walking Tour uses the [Firehose Toolkit](https://github.com/breinero/Firehose) to for [code instrumentation](https://github.com/breinero/Firehose/tree/doa/src/main/java/com/bryanreinero/firehose/metrics), [circuit breaking](https://github.com/breinero/Firehose/tree/doa/src/main/java/com/bryanreinero/firehose/circuitbreaker) and [Data Access Object registries](https://github.com/breinero/Firehose/tree/doa/src/main/java/com/bryanreinero/firehose/dao). IMPORTANT: Please note, these Firehose features are currently in the [doa](https://github.com/breinero/Firehose/tree/doa) branch, and not yet supported in master.
+
+#####Firehose's code instrumentation package 
+is used to keep operation specific performance statistics. 
+
+#####Firehose's crcuit breaker package 
+prevents this server from continuing to execute operations which are likely to fail or cause DDOS'ing downstream databases. 
+
+#####Firehose's Data Access Object package 
+gives the web server the the ability to configure and register Data Access Objects in an extensible and easy to manage system.
+
+####HUM 
+Walking Tour uses the [HUM Servlet Execution Engine](https://github.com/breinero/HUM) to define its behaviors. The HUM engine allows user to define servlet behavior based on a set configurations, or Specificaions rather than writing any code.
+
 ##Todos##
 - Improve JMX integration
+- Move class [ContexConfigulator](https://github.com/breinero/mobileDemo/blob/master/src/com/mongodb/web/tour/servlet/ContexConfigulator.java) into the [HUM](https://github.com/breinero/HUM) project as it performs serlvet configuration that can be parameterized for all users of HUM.
