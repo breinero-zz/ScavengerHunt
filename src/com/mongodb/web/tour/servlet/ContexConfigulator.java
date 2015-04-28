@@ -36,16 +36,18 @@ public class ContexConfigulator implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
     	final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ServletContext servletContext = event.getServletContext();
-        String l4jConfigPath = servletContext.getInitParameter("log4jConfigPath");
-        String prefix = "/Users/breinero/Documents/workspace/Tour/WebContent/";
-        PropertyConfigurator.configure( prefix + l4jConfigPath );
+	    
+    	ServletContext servletContext = event.getServletContext();
+    			
+	    String l4jConfigPath = servletContext.getInitParameter("log4jConfigPath");
+        PropertyConfigurator.configure( servletContext.getRealPath ( l4jConfigPath ) );
+        String DataAccessConfig = servletContext.getInitParameter("DataAccessConfig");
         
-        set = new SampleSet();
         try {
+        	set = new SampleSet();
 			mbs.registerMBean(new Statistics( set ), new ObjectName("com.bryanreinero:type=Metrics"));
 
-			FileReader fr = new FileReader	( prefix + "DataAccessConfig.json" );
+			FileReader fr = new FileReader( servletContext.getRealPath ( DataAccessConfig ) );
 			BufferedReader br =  new BufferedReader( fr );
 
 			StringBuffer sb = new StringBuffer();
@@ -56,22 +58,20 @@ public class ContexConfigulator implements ServletContextListener {
 			br.close();
 			
 			datahub = DAOServiceFactory.getDataAccessHub( sb.toString() , set);
+			DataAccessObject configDao = new configDAO( servletContext.getInitParameter("server.config.rootDir") );
+			datahub.setDataAccessObject("configs", configDao );
+			servletContext.setAttribute("daoService", datahub);
 			
 		} catch (InstanceAlreadyExistsException | MBeanRegistrationException
 				| NotCompliantMBeanException | MalformedObjectNameException e1) {
-			logger.warn(e1.getLocalizedMessage());
+			logger.warn(e1.getMessage());
 		} catch (DAOException e) {
-			logger.fatal("Error initializing DataAccessHub. "+e.getMessage());
+			logger.error("Error initializing DataAccessHub. "+e.getMessage());
 		} catch (FileNotFoundException e) {
-			logger.fatal("Error initializing DataAccessHub. "+e.getMessage());
+			logger.error("Error initializing DataAccessHub. "+e.getMessage());
 		} catch (IOException e) {
-			logger.fatal("Error initializing DataAccessHub. "+e.getMessage());
+			logger.error("Error initializing DataAccessHub. "+e.getMessage());
 		}
-        
-        DataAccessObject configDao = new configDAO( servletContext.getInitParameter("server.config.rootDir") );
-        datahub.setDataAccessObject("configs", configDao );
-        
-		servletContext.setAttribute("daoService", datahub);
     }
 
 	@Override

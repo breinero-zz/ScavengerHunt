@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.firehose.dao.DAOService;
 import com.bryanreinero.hum.server.Executor;
-import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.server.Responder;
 import com.bryanreinero.hum.server.Response;
 import com.mongodb.BasicDBObject;
@@ -49,8 +48,8 @@ public class Poi extends HttpServlet {
 		logger.info("DoaService loaded");
 		try {
 			tree = (Specification)doaServices.execute("configs", new BasicDBObject("name", "root") );
-		} catch (Exception e) {
-			logger.fatal("Error initializing Poi servlet. "+ e.getMessage());
+		} catch ( Exception e) {
+			logger.error("Error initializing Poi servlet. "+ e.getMessage());
 		}
 	}
 
@@ -61,7 +60,7 @@ public class Poi extends HttpServlet {
 			try {
 			tree.accept( executor );
 			Responder.respond(resp, executor.getResponse());
-			}catch( HumException e ) {
+			}catch( Exception e ) {
 				logger.warn("Servlet Poi failed execution. "+e.getMessage() );
 				Responder.respond(resp, stdErrResponse );
 			}

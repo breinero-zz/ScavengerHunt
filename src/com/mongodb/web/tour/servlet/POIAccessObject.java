@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.bryanreinero.firehose.dao.MongoDAO;
-import com.bryanreinero.firehose.metrics.Interval;
-import com.bryanreinero.firehose.metrics.SampleSet;
 import com.bryanreinero.hum.server.DataAccessObject;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;

@@ -14,13 +14,13 @@
   </listener>
   <context-param>
     <param-name>log4jConfigPath</param-name>
-    <param-value>WEB-INF/log4j.properties</param-value>
-  </context-param>
-  <context-param>
-    <param-name>dburl</param-name>
-    <param-value>mongodb://localhost/mobileDemo</param-value>
+    <param-value>/WEB-INF/log4j.properties</param-value>
   </context-param>
     <context-param>
+    <param-name>DataAccessConfig</param-name>
+    <param-value>/DataAccessConfig.json</param-value>
+  </context-param>
+  <context-param>
     <param-name>server.config.rootDir</param-name>
     <param-value>/Users/breinero/Documents/workspace/Tour/WebContent/WEB-INF/</param-value>
   </context-param>
