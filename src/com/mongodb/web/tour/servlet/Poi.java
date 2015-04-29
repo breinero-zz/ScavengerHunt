@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.firehose.dao.DAOService;
 import com.bryanreinero.hum.server.Executor;
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.server.Responder;
 import com.bryanreinero.hum.server.Response;
 import com.mongodb.BasicDBObject;
@@ -67,7 +68,9 @@ public class Poi extends HttpServlet {
 		}
 		catch (IOException ioe) {
 			logger.error("Servlet Poi failed to repsond to request "+ioe.getMessage() );
-		}
-		
+		} 
+		catch (HumException e1) {
+			logger.error("Servlet Poi failed to repsond to request "+e1.getMessage() );
+		}	
 	}
 }

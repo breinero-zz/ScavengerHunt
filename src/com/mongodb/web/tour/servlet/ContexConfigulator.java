@@ -1,7 +1,6 @@
 package com.mongodb.web.tour.servlet;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -43,35 +42,44 @@ public class ContexConfigulator implements ServletContextListener {
         PropertyConfigurator.configure( servletContext.getRealPath ( l4jConfigPath ) );
         String DataAccessConfig = servletContext.getInitParameter("DataAccessConfig");
         
-        try {
-        	set = new SampleSet();
-			mbs.registerMBean(new Statistics( set ), new ObjectName("com.bryanreinero:type=Metrics"));
-
+        set = new SampleSet();
+        
+        // Read the Data Access Configuration
+        String daoConfigJSON = null;
+		try {
 			FileReader fr = new FileReader( servletContext.getRealPath ( DataAccessConfig ) );
 			BufferedReader br =  new BufferedReader( fr );
-
 			StringBuffer sb = new StringBuffer();
 			String line = null;
 			while ( (line = br.readLine()) != null ) {
 				sb.append(line);
 			}
 			br.close();
-			
-			datahub = DAOServiceFactory.getDataAccessHub( sb.toString() , set);
-			DataAccessObject configDao = new configDAO( servletContext.getInitParameter("server.config.rootDir") );
-			datahub.setDataAccessObject("configs", configDao );
-			servletContext.setAttribute("daoService", datahub);
-			
-		} catch (InstanceAlreadyExistsException | MBeanRegistrationException
-				| NotCompliantMBeanException | MalformedObjectNameException e1) {
-			logger.warn(e1.getMessage());
-		} catch (DAOException e) {
-			logger.error("Error initializing DataAccessHub. "+e.getMessage());
-		} catch (FileNotFoundException e) {
-			logger.error("Error initializing DataAccessHub. "+e.getMessage());
+			daoConfigJSON = sb.toString();
 		} catch (IOException e) {
+			logger.error("Data Access configuration not loaded. "+e.getMessage() );
+		}
+
+		
+        try {
+        	datahub = DAOServiceFactory.getDataAccessHub( daoConfigJSON, set);
+			servletContext.setAttribute("daoService", datahub);
+        }
+		 catch (DAOException e) {
 			logger.error("Error initializing DataAccessHub. "+e.getMessage());
 		}
+        
+        DataAccessObject configDao = new configDAO( servletContext.getInitParameter("server.config.rootDir") );
+		datahub.setDataAccessObject("configs", configDao );
+
+		// Registering Statistics With JMX
+		try {
+			mbs.registerMBean(new Statistics( set ), new ObjectName("com.bryanreinero:type=Metrics"));
+		} catch (InstanceAlreadyExistsException | MBeanRegistrationException
+				| NotCompliantMBeanException | MalformedObjectNameException e) {
+			logger.error("Failed to register Statistics to JXM. "+e.getMessage());
+		}
+			
     }
 
 	@Override
