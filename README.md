@@ -85,14 +85,14 @@ Location: http://host:port/tour/1234/waypoint/1234/
 Update a waypoint field
 #####url
 /tour/1234/waypoint/1234/[name|desc|clues|geometry]
-
-####Delete a specific waypoint
+####Delete
+Remove a specific waypoint
 #####url
 /tour/1234/waypoint/1234
 ######Response
-```200```
-
-####Delete an entire tour
+200
+####Delete
+Remove an entire tour
 #####url
 /tour/1234
 ######Response
@@ -150,7 +150,7 @@ Request Body, content-type: application/json
     }
 ```
 
-####Delete####
+####Delete
 
 #####URL
 
