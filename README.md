@@ -11,16 +11,59 @@
 ##The demo##
 Somebody runs out ahead of Norberto and marks out a course of food spots he must eat at. Our hero Norberto then has to reach each vendor and and eat the selected food and get back to the conf before time runs out. Participants in the audience votes for or against Norbeardo
 
-##Data Model
+##Tour
+A tour is a colletions of waypoints, which together define a set of location and activities the tourist must complete.   
+###Example Waypoint
+```
+{	_id: ObjectId(),
+	tour: UUDI
+	user: UUID,
+    name: "Doug's Dogs",
+    desc: "The best hot-dog",
+    clues: [
+        "Hungry for a Coney Island?",
+        "Ask for Dr. Frankenfurter",
+        "Look for the hot dog stand"
+    ]
+    "geometry": {
+        "type": "Point",
+        "coordinates": [125.6, 10.1]
+    }
+}
+```
+###API
 
-###Point of Interest###
+####GET
+Find a tour to follow with 100 meters of the point defined by the coordinate parameters
+
+#####URL
+/tour?lat=40.87304&lon=-73.871275&max=100
+
+#####Response
+Returns the set of waypoint coordinates and waypoint descriptons for each eligble tour. The requesting client can user these points to map out the tours the user may choose to follow
 
 ```
     {
-        _id: 9101
-        user: <userId>,
-        name: "Doug's Dogs",
+    	tour: <tourId>,
         description: "The best hot-dog",
+        geometry: {
+            type: "Point",
+            coordinates: [125.6, 10.1]
+        }
+    },
+   	...
+```
+####Post
+Add a new waypoint
+
+#####url
+/tour/[tourId]/waypoint
+
+```
+    {
+    	user: <userId>,
+        name: "Doug's Dogs",
+        desc: "The best hot-dog",
         clues: [
             "Hungry for a Coney Island?",
             "Ask for Dr. Frankenfurter",
@@ -32,39 +75,34 @@ Somebody runs out ahead of Norberto and marks out a course of food spots he must
         }
     }
 ```
-
-###Field Definitions###
-- '_id' unique POI identifier. Also serves as a cheat code, entered when the contestant completes goal
-- 'user' The user who posted this point of interest
-- 'name' The name of this POI
-- 'description' What and why the user added this POI to the tour. E.G. "I like this place because... "
-- 'clues' a 3 element array of hints to help the tourer discover the POI goal. Ordered in increasing helpfulness
-- GEO JSON location of the POI
-
-
-###REST API###
-
-####Alert contestant when POI is within 100 meters####
-
-####GET####
-
+#####response
+######Code
 ```
-    <host:port>/poi?tour=1234,lat=40.87304&lon=-73.871275&max=100
+HTTP/1.1 201
+Location: http://host:port/tour/1234/waypoint/1234/
 ```
+####Put
+Update a waypoint field
+#####url
+/tour/1234/waypoint/1234/[name|desc|clues|geometry]
 
-#####Response
+####Delete a specific waypoint
+#####url
+/tour/1234/waypoint/1234
+######Response
+```200```
 
-```
-    Content-Type: "text"
-    "Hungry for a Coney Island?"
-```
-
+####Delete an entire tour
+#####url
+/tour/1234
+######Response
+```200```
 ###Check if the goal code is right###
 
 ####GET
 
 ```
-    <host:port>/poi?tour=1234,code=5678
+<host:port>/poi?tour=1234,code=5678
 ```
 
 Response
@@ -148,70 +186,30 @@ A tour is a virtual course, marked out by a challenger.
     }
 ```
 
-####Field Definitions####
-- 'name' The tour name
-- 'user' The challenger who authored the tour
-- 'time' The total time the tour should take
-- 'checkpoints' The list of goals the contestant must complete to win the tour
-- 'checkpoints.poi' A reference the the point-of-interest document that describes the checkpoint
-- 'checkpoints.time' The amount of time it should take to complete this goal
-- 'geometry' The line string defining the tour course.
-
-###REST API###
-
-####GET####
-
-#####URL 
-```
-    // by proximity 
-    <host:port>/tour?lat=40.87304&lon=-73.871275&max=100
-
-    // by user
-    <host:port>/tour?user=1234
-
-    // by explicit id
-    <host:port>/tour/1234
-```
-
-####POST####
-
-#####URL
-```
-    <host:port>/tour
-```
-
-#####Request Body
-```
-    {
-        name: <string>,
-        user: <user_id>
-    }  
-```
-
-####PUT####
-#####URL
-```
-    <host:port>/tour/1234
-```
-
-#####URL
-```
-    <host:port>/tour/1234?checkpoint=<poi_ref>
-```  
-#####Request Body
-```
-    //uneeded 
-```
-
-####DELETE####
-
-#####URL
-```
-    // only explicit delete supported
-    <host:port>/tour/1234
-```
 
 ##USER
+###API
+####URL
+/user/UUID
+#####GET
+Get the specified user doc, sans pass
+#####POST
+Register new user
+######Request Body
+```
+{
+    name: <string>,
+    email: <string>,
+    pass: <hash>,
+    description: <string>
+}
+```
+######Response
+```
+204
+Location: /user/uuid
+```
+
 
 ###Document Model###
 ```
@@ -231,8 +229,55 @@ A tour is a virtual course, marked out by a challenger.
 - pass: Hashed passphrase
 - description: Blurb about the user (140 character limit)
 
+##Checkin
+Represents an event log detailing a user's current physical location as they progress through the tour
 
-###Depedencies 
+###API
+####URL
+/user/UUID/tour/UUID
+#####GET
+All checkins for a given user tour
+######Response
+```
+{
+	_id: ObjectId(),
+	user: UUID,
+	tour: tourId,
+	timestamp: ISODate(),
+	type: ['inprog'|'goal']
+	geometry: {
+		type: "Point",
+		coordinates: [ long, lat ]
+	},
+	...
+}
+```
+#####POST
+Log a user's current location while on tour 
+######Request Body
+```
+{
+	timestamp: ISODate(),
+	type: ['inprog'|'goal']
+	geometry: {
+		type: "Point",
+		coordinates: [ long, lat ]
+	}
+}
+```
+######Response
+```
+http: 1.1 201
+Location: /user/UUID/checkin/UUID
+```
+
+#####Put
+Same behaviour as POST. Checkins are immutable.
+
+#####Delete
+Unsupported. Checkins are immutable.
+
+##Depedencies 
 
 ####Firehose
 Walking Tour uses the [Firehose Toolkit](https://github.com/breinero/Firehose) to for [code instrumentation](https://github.com/breinero/Firehose/tree/doa/src/main/java/com/bryanreinero/firehose/metrics), [circuit breaking](https://github.com/breinero/Firehose/tree/doa/src/main/java/com/bryanreinero/firehose/circuitbreaker) and [Data Access Object registries](https://github.com/breinero/Firehose/tree/doa/src/main/java/com/bryanreinero/firehose/dao). IMPORTANT: Please note, these Firehose features are currently in the [doa](https://github.com/breinero/Firehose/tree/doa) branch, and not yet supported in master.
