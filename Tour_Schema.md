@@ -60,13 +60,16 @@ tour.checkins
 	user: UUID,
 	tour: tourId,
 	timestamp: ISODate(),
-	type: ['inprog'|'goal']
+	type: ['inprog'|'aquire']
 	geometry: {
 		type: "Point",
 		coordinates: [ long, lat ]
 	}
 }
 ```
+###NOTE!
+The checkin entity can be of type 'inprog' which indicates this checkin occured while the use was enroute to completing a goal. Or a checkin can be of type 'aquire' which records the event when the user achieved a waypoint goal. The type field is a descriminator.
 ###Operations
 #####Find path of given user 
 { user: UUID }
+

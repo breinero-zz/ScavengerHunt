@@ -6,14 +6,21 @@
 
 ###The Application###
 
-`Walking Tour` (needs a better name) is a geo-caching game for mobile apps. A tour guide posts a tour with challenges at multiple waypoints.  The challenger must reach and complete the waypoints within a given time. The challenger wins if they complete the course within the challenge time.
+Norbeardo is a geo-caching / scavenger hunt game for mobile apps. A tour guide posts a tour with challenges at multiple waypoints.  The challenger must reach and complete the waypoints within a given time. The challenger wins if they complete the course within the challenge time.
 
-##The demo##
-Somebody runs out ahead of Norberto and marks out a course of food spots he must eat at. Our hero Norberto then has to reach each vendor and and eat the selected food and get back to the conf before time runs out. Participants in the audience votes for or against Norbeardo
+####Data Model
+Scavenger Hunt uses three main entities 
 
-##Tour
-A tour is a colletions of waypoints, which together define a set of location and activities the tourist must complete.   
-###Example Waypoint
+- [Waypoint](https://github.com/breinero/mobileDemo/blob/master/Tour_Schema.md#tour-waypoint)
+- [User](https://github.com/breinero/mobileDemo/blob/master/Tour_Schema.md#user)
+- [Checkin](https://github.com/breinero/mobileDemo/blob/master/Tour_Schema.md#checkin)
+
+##Server API
+
+###Waypoints
+A waypoint is a item or activity at a set location, which people participating in a tour must find. A set of related waypoints are grouped to gether to form a tour, or scavenger hunt. A tourist completes the scavenger hunt once he/she reaches and completes all waypoints on the tour.
+   
+####Example Waypoint
 ```
 {	_id: ObjectId(),
 	tour: UUDI
@@ -31,37 +38,34 @@ A tour is a colletions of waypoints, which together define a set of location and
     }
 }
 ```
-###API
 
-####GET
+####Operations
+
+##### GET /waypoints/1234
+Get waypoint with id 1234
+
+#####GET /waypoints/tour/5678
+Get all waypoints belonging to tour 5678
+
+#####GET /waypoints/user/9101/tour/1234
+Get all of user 9101's waypoints which belong to tour 5678
+
+#####PUT /waypoints/1234/desc/
+Update waypoint 1234's description string
+######Request Body
+```
+"The best hot-dog in the city"
+```
+
+#####GET /waypoints?lat=40.87304&lon=-73.871275&max=100
 Find a tour to follow with 100 meters of the point defined by the coordinate parameters
 
-#####URL
-/tour?lat=40.87304&lon=-73.871275&max=100
+####POST /waypoint/user/9101/tour/1234
+Add a new waypoint owned by user 9101 to be part of tour 1234
 
-#####Response
-Returns the set of waypoint coordinates and waypoint descriptons for each eligble tour. The requesting client can user these points to map out the tours the user may choose to follow
-
+######Request Body
 ```
     {
-    	tour: <tourId>,
-        description: "The best hot-dog",
-        geometry: {
-            type: "Point",
-            coordinates: [125.6, 10.1]
-        }
-    },
-   	...
-```
-####Post
-Add a new waypoint
-
-#####url
-/tour/[tourId]/waypoint
-
-```
-    {
-    	user: <userId>,
         name: "Doug's Dogs",
         desc: "The best hot-dog",
         clues: [
@@ -75,133 +79,24 @@ Add a new waypoint
         }
     }
 ```
-#####response
-######Code
-```
-HTTP/1.1 201
-Location: http://host:port/tour/1234/waypoint/1234/
-```
-####Put
-Update a waypoint field
-#####url
-/tour/1234/waypoint/1234/[name|desc|clues|geometry]
-####Delete
-Remove a specific waypoint
-#####url
-/tour/1234/waypoint/1234
-######Response
-200
-####Delete
-Remove an entire tour
-#####url
-/tour/1234
-######Response
-```200```
-###Check if the goal code is right###
 
-####GET
+###Users
+Need a session token once the user has authenticated
 
-```
-<host:port>/poi?tour=1234,code=5678
-```
+####Operations
 
-Response
-```
-    Content-Type: "text"
-    "Congradulations! <goal description>"
-```
-
-###POST###
-
-#####URL
-
-```
-    <host:port>/poi
-```
-
-Request Body, where content-type: application/json
-
-```
-    {
-        user: 1234,
-        description: "some text"
-        "geometry": {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-        }
-    }
-```
-
-####PUT####
-
-URL
-```
-    <host:port>poi/9101
-```
-Request Body, content-type: application/json
-
-```
-    {
-        clues: [
-            "Hungry for a Coney Island?",
-            "Ask for Dr. Frankenfurter",
-            "Look for the hot dog stand"
-        ] 
-    }
-```
-
-####Delete
-
-#####URL
-
-```
-    /poi/9101
-```
-
-##Tour
-
-
-A tour is a virtual course, marked out by a challenger. 
-
-
-###Document Model###
-```
-    {
-        name: <string>,
-        user: <user_id>,
-        time: <seconds>,
-        checkpoints: [
-            { 
-                poi: <_id>,
-                time: <seconds> 
-            }   
-        ]
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
-          ]
-        }
-        
-    }
-```
-
-
-##USER
-###API
-####URL
-/user/UUID
-#####GET
+#####GET /users/9101
 Get the specified user doc, sans pass
-#####POST
+
+#####HTTPS POST /users
 Register new user
 ######Request Body
 ```
 {
     name: <string>,
     email: <string>,
-    pass: <hash>,
-    description: <string>
+    pass: <String>,
+    description: <140 char String>
 }
 ```
 ######Response
@@ -210,32 +105,12 @@ Register new user
 Location: /user/uuid
 ```
 
-
-###Document Model###
-```
-    {
-        _id: <int>,
-        name: <string>,
-        email: <string>,
-        pass: <hash>,
-        description: <string>
-    }
-```
-
-###Field Definitions###
-- _id: Unique identifier for user (immutable)
-- name: User's name 
-- email: User's email
-- pass: Hashed passphrase
-- description: Blurb about the user (140 character limit)
-
-##Checkin
+###Checkin
 Represents an event log detailing a user's current physical location as they progress through the tour
 
-###API
-####URL
-/user/UUID/tour/UUID
-#####GET
+####Operations
+
+#####GET /checkins/user/UUID/tour/UUID
 All checkins for a given user tour
 ######Response
 ```
@@ -252,7 +127,7 @@ All checkins for a given user tour
 	...
 }
 ```
-#####POST
+#####POST /checkins/user/UUID/tour/UUID
 Log a user's current location while on tour 
 ######Request Body
 ```
@@ -265,17 +140,15 @@ Log a user's current location while on tour
 	}
 }
 ```
-######Response
-```
-http: 1.1 201
-Location: /user/UUID/checkin/UUID
-```
 
-#####Put
+#####POST /checkins/user/UUID/tour/UUID
 Same behaviour as POST. Checkins are immutable.
 
 #####Delete
 Unsupported. Checkins are immutable.
+
+##The demo
+Somebody runs out ahead of Norberto and marks out a course of food spots he must eat at. Our hero Norberto then has to reach each vendor and and eat the selected food and get back to the conf before time runs out. Participants in the audience votes for or against Norbeardo
 
 ##Depedencies 
 
