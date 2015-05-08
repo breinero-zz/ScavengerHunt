@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.firehose.dao.DAOService;
@@ -22,7 +22,7 @@ import com.mongodb.BasicDBObject;
 /**
  * Servlet implementation class Poi
  */
-@WebServlet("/Poi")
+@WebServlet("/Tour/*")
 public class Poi extends HttpServlet {
 
 
@@ -30,7 +30,7 @@ public class Poi extends HttpServlet {
 	private DAOService doaServices;
 
 	public static Logger logger = LogManager.getLogger( Poi.class.getName() ); 
-	public Specification tree = null;
+	//public Specification tree = null;
 	
 	private static Response stdErrResponse = new Response();
 	
@@ -47,22 +47,21 @@ public class Poi extends HttpServlet {
 		logger.info("loading DoaService");
 		doaServices = (DAOService) config.getServletContext().getAttribute("daoService");
 		logger.info("DoaService loaded");
-		try {
-			tree = (Specification)doaServices.execute("configs", new BasicDBObject("name", "root") );
-		} catch ( Exception e) {
-			logger.error("Error initializing Poi servlet. "+ e.getMessage());
-		}
+		
 	}
 
 	public void service(HttpServletRequest req, HttpServletResponse resp) {
 
 		try {
 			Executor executor = new Executor(req, doaServices);
+
 			try {
-			tree.accept( executor );
-			Responder.respond(resp, executor.getResponse());
+				Specification tree = (Specification) doaServices.execute(
+						"configs", new BasicDBObject("name", "root"));
+				tree.accept( executor );
+				Responder.respond(resp, executor.getResponse());
 			}catch( Exception e ) {
-				logger.warn("Servlet Poi failed execution. "+e.getMessage() );
+				logger.error("Servlet Poi failed execution. "+e.getCause() );
 				Responder.respond(resp, stdErrResponse );
 			}
 		}
