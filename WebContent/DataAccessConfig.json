@@ -4,7 +4,7 @@
        hosts: [ 'localhost:27017' ] }
   ], 
   DAOs: [
-      {
+	{
           name: 'Poi', 
           className: 'com.mongodb.web.tour.servlet.POIAccessObject',
           cluster: 'a', 
@@ -23,6 +23,44 @@
                   { latency: 1000.0 }, 
                   { concurrency: 50.0 } 
             ] 
-        }
-    ] 
+    },
+    {
+      name: 'checkinInsert', 
+      className: 'com.mongodb.tour.dao.InsertCheckpoint',
+      cluster: 'a', 
+      namespace: 'walkingtour.checkpoints', 
+      writeConcern: {
+          w: "majority"
+      },
+      readPref: {
+          mode: 'primary',
+          tags: []
+      },
+      timeout: 5000,
+      circuitbreakers: [ 
+        { opsPerSec: 5000.0 }, 
+        { latency: 1000.0 }, 
+        { concurrency: 50.0 } 
+      ] 
+    },
+    {
+      name: 'checkinGet', 
+      className: 'com.mongodb.tour.dao.GetCheckpoint',
+      cluster: 'a', 
+      namespace: 'walkingtour.checkpoints', 
+      writeConcern: {
+          w: "majority"
+      },
+      readPref: {
+          mode: 'primary',
+          tags: []
+      },
+      timeout: 5000,
+      circuitbreakers: [ 
+        { opsPerSec: 5000.0 }, 
+        { latency: 1000.0 }, 
+        { concurrency: 50.0 } 
+      ] 
+    }
+  ] 
 };
