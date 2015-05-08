@@ -15,9 +15,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.bryanreinero.firehose.dao.DAOException;
 import com.bryanreinero.firehose.dao.DAOServiceFactory;
@@ -38,9 +37,7 @@ public class ContexConfigulator implements ServletContextListener {
 	    
     	ServletContext servletContext = event.getServletContext();
     			
-	    String l4jConfigPath = servletContext.getInitParameter("log4jConfigPath");
-        PropertyConfigurator.configure( servletContext.getRealPath ( l4jConfigPath ) );
-        String DataAccessConfig = servletContext.getInitParameter("DataAccessConfig");
+	    String DataAccessConfig = servletContext.getInitParameter("DataAccessConfig");
         
         set = new SampleSet();
         
@@ -59,18 +56,16 @@ public class ContexConfigulator implements ServletContextListener {
 		} catch (IOException e) {
 			logger.error("Data Access configuration not loaded. "+e.getMessage() );
 		}
-
 		
         try {
         	datahub = DAOServiceFactory.getDataAccessHub( daoConfigJSON, set);
 			servletContext.setAttribute("daoService", datahub);
+			DataAccessObject configDao = new configDAO( servletContext.getInitParameter("server.config.rootDir") );
+			datahub.setDataAccessObject("configs", configDao );
         }
 		 catch (DAOException e) {
 			logger.error("Error initializing DataAccessHub. "+e.getMessage());
 		}
-        
-        DataAccessObject configDao = new configDAO( servletContext.getInitParameter("server.config.rootDir") );
-		datahub.setDataAccessObject("configs", configDao );
 
 		// Registering Statistics With JMX
 		try {
